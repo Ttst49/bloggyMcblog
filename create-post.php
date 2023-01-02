@@ -1,29 +1,44 @@
 <?php
-
-
-$adresseServeurMYSQL= "localhost";
-$username = "admin";
-$password ="Azertyuiop";
-$nomDB= "Blog";
-
-$pdo = new PDO("mysql:host=$adresseServeurMYSQL;dbname=$nomDB",$username,$password,
-    [
-        PDO::ATTR_ERRMODE=> PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
-    ]);
-
-
-$request = $pdo->query("SELECT * FROM posts");
-
-$posts= $request->fetchAll();
-
 $input="rien";
 
-if (!empty($_GET["bonjour"])){
+if (!empty($_POST["bonjour"])){
 
-    $input= $_GET["bonjour"];
+    $input= $_POST["bonjour"];
 }
 
+
+
+$title= null;
+$content= null;
+
+
+if (!empty($_POST["title"])){
+    $title= $_POST["title"];
+}
+if (!empty($_POST["content"])){
+    $title= $_POST["content"];
+}
+
+if ($title && $content){
+    $adresseServeurMYSQL= "localhost";
+    $username = "admin";
+    $password ="Azertyuiop";
+    $nomDB= "Blog";
+
+    $pdo = new PDO("mysql:host=$adresseServeurMYSQL;dbname=$nomDB",$username,$password,
+        [
+            PDO::ATTR_ERRMODE=> PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
+        ]);
+
+    $request= $pdo->prepare("INSERT INTO posts SET title= :title, content= :content");
+    $request->execute([
+        "title"=> $title,
+        "content"=>$content
+    ]);
+
+    header('location: index.php');
+}
 
 
 ?>
@@ -51,7 +66,7 @@ if (!empty($_GET["bonjour"])){
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="create-post.php">Create Post</a>
+                    <a class="nav-link" href="#">Link</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,26 +93,20 @@ if (!empty($_GET["bonjour"])){
 
 <div class="container mt-5">
 
-    <?php foreach ($posts as $post): ?>
 
-    <div class="post mt-3 border">
-    <h3><?= $post["title"] ?></h3>
-    <p><?= $post["content"] ?></p>
-    </div>
 
-    <?php endforeach; ?>
+<form method="POST" >
 
-</div>
-
-<form  method="GET" >
-
-    <input type="text" name="bonjour">
-    <input type="submit">oui</input>
+    <input type="text" name="title">
+    <input type="text" name="content">
+    <input type="submit">
 
 </form>
 
 
-<h2>truc ecrit dans l'input: <?= $input?> </h2>
+
+</div>
 
 </body>
 </html>
+
