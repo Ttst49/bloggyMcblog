@@ -15,9 +15,17 @@ if($id){
 
   $post = $query->fetch();
 
+  /*if ()
+
+    $queryComment= $pdo->prepare("SELEC * FROM comments WHERE post_id= :id");
+
+    $queryComment->execute(["id"=>$id]);
+
+    $comment = $queryComment->fetchAll();
+
    if(!$post){
        header("Location: index.php");
-   }
+   }*/
 
 }
 ?>
@@ -82,6 +90,11 @@ if($id){
     </div>
 
 </div>
+
+    <div class="comment mt-2 border-primary">
+        <h3><?= "bonjur"?></h3>
+    </div>
+
 
 
 
