@@ -1,6 +1,8 @@
 <?php
 
 $id = null;
+$titleUpdate=null;
+$contentUpdate=null;
 
 if(!empty($_GET['id']) && ctype_digit($_GET['id']) ){
     $id = $_GET['id'];
@@ -19,6 +21,29 @@ if($id){
        header("Location: index.php");
    }
 
+
+
+    if( !empty($_POST['titleUpdate'])){
+        $titleUpdate = $_POST['titleUpdate'];
+    }
+    if( !empty($_POST['contentUpdate'])){
+        $contentUpdate = $_POST['contentUpdate'];
+    }
+
+    if($titleUpdate && $contentUpdate){
+
+        $request = $pdo->prepare('UPDATE posts SET title= :title,content= :content WHERE posts.id= :id');
+
+
+        $request->execute([
+            "title"=> $titleUpdate,
+            "content"=>$contentUpdate,
+            "id"=>$id
+        ]);
+
+        header('Location: index.php');
+
+    }
 }
 ?>
 
@@ -74,10 +99,10 @@ if($id){
 
 
 
-    <form action="">
-        <input type="text" name="titleUpdate" value="<?= $post['title'] ?>" id="">
-        <input type="text" name="contentUpdate" value="<?= $post['content'] ?>" id="">
-        <button type="submit" class="btn btn-success">update</button>
+    <form method="post">
+        <input type="text" name="titleUpdate" value="<?= $post['title'] ?>">
+        <input type="text" name="contentUpdate" value="<?= $post['content'] ?>">
+        <button type="submit" value="update" class="btn btn-success">update</button>
 
     </form>
 
