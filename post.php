@@ -1,4 +1,7 @@
 <?php
+
+require_once 'libraries/tools.php';
+
 $id = null;
 
 if(!empty($_GET['id']) && ctype_digit($_GET['id']) ){
@@ -21,12 +24,8 @@ if($id){
    $comments = $request->fetchAll();
 
 
-
-   ob_start();
-
-   require_once ('templates/posts/post.html.php');
-
-   $pageContent = ob_get_clean();
-
-   require_once ('templates/base.html.php');
+render("post.html",[
+    "post"=>$post,
+    "comments"=>$comments
+]);
 }

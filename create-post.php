@@ -1,6 +1,7 @@
 <?php
-//faire tout le nécéssaire pour récupérer le contenu de l'article depuis $_POST
-//et le sauvegarder dans la DB à l'aide de PDO
+
+require_once 'libraries/tools.php';
+
 $title = null;
 $content=null;
 
@@ -27,11 +28,4 @@ if($title && $content){
     header('Location: index.php');
 
 }
-ob_start();
-
-require_once ('templates/posts/create.html.php');
-
-$pageContent = ob_get_clean();
-
-require_once ('templates/base.html.php');
-
+render("posts/create",[]);
