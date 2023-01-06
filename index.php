@@ -1,45 +1,40 @@
 <?php
 
 
-$adresseServeurMYSQL= "localhost";
+$adresseServeurMySQL = "localhost";
+$nomDeDatabase = "blog";
 $username = "admin";
-$password ="Azertyuiop";
-$nomDB= "Blog";
+$password = "Azertyuiop";
 
-$pdo = new PDO("mysql:host=$adresseServeurMYSQL;dbname=$nomDB",$username,$password,
-    [
-        PDO::ATTR_ERRMODE=> PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
-    ]);
-
+$pdo = new PDO("mysql:host=$adresseServeurMySQL;dbname=$nomDeDatabase",
+                    $username,
+                    $password,
+                    [
+                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    ]
+);
 
 $request = $pdo->query("SELECT * FROM posts");
 
-$posts= $request->fetchAll();
-
-$input="rien";
-
-if (!empty($_GET["bonjour"])){
-
-    $input= $_GET["bonjour"];
-}
+$posts = $request->fetchAll();
 
 
 
 ?>
 
-<!doctype html>
-<html lang="fr" xmlns:input="http://www.w3.org/1999/html">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>bloggy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <title>Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-warning">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +46,7 @@ if (!empty($_GET["bonjour"])){
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="create-post.php">Create Post</a>
+                    <a class="nav-link" href="create-post.php">New Post</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,26 +73,28 @@ if (!empty($_GET["bonjour"])){
 
 <div class="container mt-5">
 
-    <?php foreach ($posts as $post): ?>
+    <?php foreach ($posts as $post) :  ?>
 
-    <div class="post mt-3 border">
-    <h3><?= $post["title"] ?></h3>
-    <p><?= $post["content"] ?></p>
-    </div>
+        <form action="POST">
+            <div class="post mt-3">
+                <h3><?= $post["title"] ?></h3>
+                <p><?= $post["content"] ?></p>
+                <p>ID=<?= $post["id"] ?></p>
+            </div>
+        <input name="delete" value="delete" type="submit">
 
-    <?php endforeach; ?>
+        </form>
+    <?php
+        if (isset($_POST['delete'])) {
+            $id = $_POST['id'];
+
+            $sqlDEL = "DELETE FROM posts WHERE id=$id";
+
+        }  echo $id ;
+    endforeach;?>
+
 
 </div>
-
-<form  method="GET" >
-
-    <input type="text" name="bonjour">
-    <input type="submit">oui</input>
-
-</form>
-
-
-<h2>truc ecrit dans l'input: <?= $input?> </h2>
 
 </body>
 </html>

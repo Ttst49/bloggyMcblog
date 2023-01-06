@@ -1,60 +1,58 @@
 <?php
-$input="rien";
 
-if (!empty($_POST["bonjour"])){
 
-    $input= $_POST["bonjour"];
+$title = null;
+$content=null;
+
+if( !empty($_POST['title'])){
+    $title = $_POST['title'];
+}
+if( !empty($_POST['content'])){
+    $content = $_POST['content'];
 }
 
+if($title && $content){
 
 
-$title= null;
-$content= null;
+    $adresseServeurMySQL = "localhost";
+    $nomDeDatabase = "blog";
+        $username = "admin";
+    $password = "Azertyuiop";
 
-
-if (!empty($_POST["title"])){
-    $title= $_POST["title"];
-}
-if (!empty($_POST["content"])){
-    $title= $_POST["content"];
-}
-
-if ($title && $content){
-    $adresseServeurMYSQL= "localhost";
-    $username = "admin";
-    $password ="Azertyuiop";
-    $nomDB= "Blog";
-
-    $pdo = new PDO("mysql:host=$adresseServeurMYSQL;dbname=$nomDB",$username,$password,
+    $pdo = new PDO("mysql:host=$adresseServeurMySQL;dbname=$nomDeDatabase",
+        $username,
+        $password,
         [
-            PDO::ATTR_ERRMODE=> PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
-        ]);
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
 
-    $request= $pdo->prepare("INSERT INTO posts SET title= :title, content= :content");
+    $request = $pdo->prepare('INSERT INTO posts SET title = :title, content = :content');
+
     $request->execute([
-        "title"=> $title,
-        "content"=>$content
+            "title"=> $title,
+            "content"=>$content
     ]);
 
-    header('location: index.php');
+    header('Location: index.php');
+
 }
 
 
 ?>
-
 <!doctype html>
-<html lang="fr" xmlns:input="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>bloggy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <title>Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-warning">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,20 +91,17 @@ if ($title && $content){
 
 <div class="container mt-5">
 
+    <h1>nouveau post</h1>
 
-
-<form method="POST" >
-
-    <input type="text" name="title">
-    <input type="text" name="content">
-    <input type="submit">
-
-</form>
-
-
+    <form action="" method="post">
+        <input type="text" name="title" id="">
+        <input type="text" name="content" id="">
+        <input type="submit" value="Envoyer">
+    </form>
 
 </div>
 
+
+
 </body>
 </html>
-
