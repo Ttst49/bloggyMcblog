@@ -1,47 +1,27 @@
 <?php
 
+$id = null;
 
-$title = null;
-$content=null;
-
-if( !empty($_POST['title'])){
-    $title = $_POST['title'];
+if(!empty($_GET['id']) && ctype_digit($_GET['id']) ){
+    $id = $_GET['id'];
 }
-if( !empty($_POST['content'])){
-    $content = $_POST['content'];
-}
+if($id){
 
-if($title && $content){
+    require_once('pdo.php');
 
+   $query= $pdo->prepare('SELECT * FROM posts WHERE id=:id');
 
-    $adresseServeurMySQL = "localhost";
-    $nomDeDatabase = "blog";
-    $username = "admin";
-    $password = "Azertyuiop";
+   $query->execute(["id"=>$id]);
 
-    $pdo = new PDO("mysql:host=$adresseServeurMySQL;dbname=$nomDeDatabase",
-        $username,
-        $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
+  $post = $query->fetch();
 
-    $request = $pdo->prepare('INSERT INTO posts SET title = :title, content = :content');
-
-
-    $request->execute([
-            "title"=> $title,
-            "content"=>$content
-    ]);
-
-    header('Location: index.php');
+   if(!$post){
+       header("Location: index.php");
+   }
 
 }
-
-
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -65,7 +45,7 @@ if($title && $content){
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="create-post.php">New Post</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -92,12 +72,13 @@ if($title && $content){
 
 <div class="container mt-5">
 
-    <h1>nouveau post</h1>
 
-    <form action="create-post.php" method="post">
-        <input type="text" name="title" id="">
-        <input type="text" name="content" id="">
-        <input type="submit" value="Envoyer">
+
+    <form action="">
+        <input type="text" name="titleUpdate" value="<?= $post['title'] ?>" id="">
+        <input type="text" name="contentUpdate" value="<?= $post['content'] ?>" id="">
+        <button type="submit" class="btn btn-success">update</button>
+
     </form>
 
 </div>

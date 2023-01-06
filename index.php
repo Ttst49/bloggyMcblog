@@ -1,6 +1,8 @@
 <?php
 
+// se connecter à la DB
 
+//PDO
 $adresseServeurMySQL = "localhost";
 $nomDeDatabase = "blog";
 $username = "admin";
@@ -19,11 +21,22 @@ $request = $pdo->query("SELECT * FROM posts");
 
 $posts = $request->fetchAll();
 
+ //print_r($posts);
+
+
+
+$input = "rien";
+
+if( !empty($_GET['carotte']) ){
+
+    $input = $_GET['carotte'];
+}
+
 
 
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -75,26 +88,16 @@ $posts = $request->fetchAll();
 
     <?php foreach ($posts as $post) :  ?>
 
-        <form action="POST">
             <div class="post mt-3">
                 <h3><?= $post["title"] ?></h3>
                 <p><?= $post["content"] ?></p>
-                <p>ID=<?= $post["id"] ?></p>
+                <a href="post.php?id=<?= $post['id'] ?>" class="btn btn-success">Lire</a>
             </div>
-        <input name="delete" value="delete" type="submit">
 
-        </form>
-    <?php
-        if (isset($_POST['delete'])) {
-            $id = $_POST['id'];
-
-            $sqlDEL = "DELETE FROM posts WHERE id=$id";
-
-        }  echo $id ;
-    endforeach;?>
-
-
+    <?php endforeach; ?>
 </div>
+
+
 
 </body>
 </html>
